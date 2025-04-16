@@ -8,8 +8,9 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI gameOverText;
-    public Button restartButton;
+    public GameObject gameOverUI;
+    //public Button pauseButton;
+    public GameObject pauseUI;
     private int score;
 
     public delegate void OnUIRestartDelegate();
@@ -42,12 +43,14 @@ public class UIManager : MonoBehaviour
 
     private void OnUIUpdateScoreText(int score)
     {
-        scoreText.text = "Score: " + score;
+        scoreText.text = " " + score;
     }
+
+
     private void OnUIGameOver()
     {
-        gameOverText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(true);
+        gameOverUI.SetActive(true);
+        
     }
    
 
@@ -55,6 +58,21 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void OnEnterPausePress()
+    {
+        pauseUI.SetActive(true);
+        GameManager.instance.isGameActive = false;
+    }
+
+    public void OnResumeGame()
+    {
+        pauseUI.SetActive(false);
+        GameManager.instance.isGameActive = true;
+
+    }
+
+    
 
 
 }
