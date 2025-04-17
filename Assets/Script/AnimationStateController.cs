@@ -17,14 +17,13 @@ public class AnimationStateController : MonoBehaviour
     private void OnPlayerJump()
     {
         animator.SetTrigger("Jump");
-        Debug.Log("jump denendi");
+       
        
         
     }
     private void OnPlayerFall()
     {
         animator.SetTrigger("Fall");
-        //animator.SetBool("IsJumping", true);
 
     }
 
@@ -32,7 +31,6 @@ public class AnimationStateController : MonoBehaviour
     {
 
 
-        //animator.SetBool("IsJumping", false);
         animator.SetTrigger("Run");
 
     }

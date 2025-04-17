@@ -67,10 +67,7 @@ public class ObjectPooler : MonoBehaviour
     //GetFrom
     public GameObject GetFromPool(string type)
     {
-        if (type == "City")
-        {
-            Debug.Log("citye girdi");
-        }
+     
         if (!poolDictionary.ContainsKey(type))
         {
             return null;

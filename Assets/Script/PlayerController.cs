@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
     
     private void OnPlayerObstacleCollision(Collider other)
     {
-        if (IsDead(other))
+        if (IsDead(other) && GameManager.instance.isGameActive)
         {
             OnPlayerHitObstacle?.Invoke();
             Debug.Log("Game OVER");
@@ -195,8 +195,8 @@ public class PlayerController : MonoBehaviour
         Vector3 inBetweenDirectionVector = (transform.position - otherObjectPosition).normalized;
 
         float dotProduct = Vector3.Dot(inBetweenDirectionVector, crushDirectionVector);
-   
-        return dotProduct < -0.65f;
+        Debug.Log(dotProduct);
+        return dotProduct < -0.85f;
     }
 
 

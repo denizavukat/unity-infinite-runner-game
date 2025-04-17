@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReturnToPool : MonoBehaviour
 {
-    public float offScreenDistance = 100.0f;
+    public float offScreenDistance = 20.0f;
     public string objectType;
 
     void Update()

@@ -8,7 +8,9 @@ public class MatrixSpawnManager : MonoBehaviour
     public float rowConstant = 100.0f;
     private int rowCount;          
     public float cellLength;
-
+    [SerializeField] float cityLength = 50.0f;
+    [SerializeField] int cityCount;
+    [SerializeField] int roadCount;
     public float spawnMagnetChance = 0.1f;
 
 
@@ -19,6 +21,7 @@ public class MatrixSpawnManager : MonoBehaviour
     public float roadLength = 180f;
     private float offsetDistance = 10f;
     private GameObject lastRoadTile;
+    private GameObject lastCityTile;
 
     void Awake()
     {
@@ -36,7 +39,18 @@ public class MatrixSpawnManager : MonoBehaviour
 
         SpawnMatrixOnRoad(roadTile);
     }
-    
+
+    public void SpawnCity(Vector3 position)
+    {
+        GameObject cityTile = ObjectPooler.instance.GetFromPool("City");
+        cityTile.transform.position = position;
+        cityTile.transform.rotation = Quaternion.identity;
+        lastCityTile = cityTile;
+        
+
+
+    }
+
     public void SpawnMatrixOnRoad(GameObject roadTile)
     {
         Vector3 tilePos = roadTile.transform.position;
@@ -118,10 +132,21 @@ public class MatrixSpawnManager : MonoBehaviour
     */
     void Start()
     {
-        for (int i = 0; i < 3; i++)
+        cityCount = ObjectPooler.instance.poolDictionary["City"].size;
+        roadCount = ObjectPooler.instance.poolDictionary["Road"].size;
+
+        for (int i = 0; i < roadCount; i++)
         {
             SpawnRoad(new Vector3(0, 0, i * roadLength));
         }
+
+        for (int i = 0; i < cityCount; i++)
+
+        {
+            SpawnCity(new Vector3(0, 0, i * cityLength));
+
+        }
+
     }
 
     void Update()
@@ -130,6 +155,11 @@ public class MatrixSpawnManager : MonoBehaviour
         {
             SpawnRoad(new Vector3(0, 0, lastRoadTile.transform.position.z + roadLength));
             
+        }
+        if (PlayerController.instance.transform.position.z > lastCityTile.transform.position.z- cityCount * cityLength)
+        {
+            SpawnCity(new Vector3(0, 0, lastCityTile.transform.position.z + cityLength));
+
         }
     }
 }
