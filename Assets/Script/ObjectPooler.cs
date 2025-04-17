@@ -49,6 +49,7 @@ public class ObjectPooler : MonoBehaviour
     {
         GameObject currentObject = Instantiate(pool.prefab);
         currentObject.SetActive(false);
+     
         pool.queue.Enqueue(currentObject);
         return currentObject;
     }
@@ -66,6 +67,10 @@ public class ObjectPooler : MonoBehaviour
     //GetFrom
     public GameObject GetFromPool(string type)
     {
+        if (type == "City")
+        {
+            Debug.Log("citye girdi");
+        }
         if (!poolDictionary.ContainsKey(type))
         {
             return null;
@@ -76,10 +81,10 @@ public class ObjectPooler : MonoBehaviour
         {
             SpawnPoolObject(poolDictionary[type]);
         }
-
+       
         objectToSpawn = poolDictionary[type].queue.Dequeue();
 
-
+      
         objectToSpawn.SetActive(true);
         
 

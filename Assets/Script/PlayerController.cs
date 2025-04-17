@@ -10,8 +10,9 @@ public class PlayerController : MonoBehaviour
     public delegate void OnPlayerHitObstacleDelegate();
     public static event OnPlayerHitObstacleDelegate OnPlayerHitObstacle;
 
+    public delegate void OnPlayerFallDelegate();
+    public static event OnPlayerFallDelegate OnPlayerFall;
 
-    
 
     public delegate void ResetPositionsDelegate();
     public static event ResetPositionsDelegate OnResetPositions;
@@ -75,8 +76,7 @@ public class PlayerController : MonoBehaviour
         isOnGround = true;
         isJumping = false;
         jumpCount = 0;
-        //animator.SetBool("IsJumping", false);
-
+        verticalVelocity = 0f;
     }
 
    
@@ -143,30 +143,30 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.isGameActive)
-        {
-            transform.position += forwardVector * forwardSpeed * Time.deltaTime;
+        if (!GameManager.instance.isGameActive) return;
+       
+        transform.position += forwardVector * forwardSpeed * Time.deltaTime;
             MoveSideways();
 
             if (!isOnGround)
             {
                 verticalVelocity += gravity * Time.deltaTime;
                 transform.position += new Vector3(0, verticalVelocity * Time.deltaTime, 0);
-                
+                if(verticalVelocity<= 0)
+                {
+                    OnPlayerFall?.Invoke();
+                }
                 if (transform.position.y <= initialPlayerPositions.y)
                 {
                     transform.position = new Vector3(transform.position.x, initialPlayerPositions.y, transform.position.z);
-                    //isOnGround = true;
-                    //isJumping = false;
-                    jumpCount = 0;
-                    verticalVelocity = 0f;
+                    
                 }
             }
 
 
 
 
-        }     
+           
     }
 
     private void MoveSideways()
@@ -187,46 +187,7 @@ public class PlayerController : MonoBehaviour
         transform.position += directionVector * lineChangeSpeed * Time.deltaTime;
 
     }
-    /*
-    private void Jump()
-    {
-        
-        if (jumpCount > 0 && jumpCount <= maxJumpCount)
-        {
-            Vector3 desiredPosition = new Vector3(transform.position.x, Math.Min(initialPlayerPositions.y + jumpheight * (jumpCount), maxHeight), transform.position.z);
-            Vector3 currentPosition = transform.position;
-            Vector3 differenceVector = desiredPosition - currentPosition;
-            if (differenceVector.magnitude < 0.01)
-            {
-                transform.position = desiredPosition;
-                isJumping = false;
-                
-                return;
-            }
-            Vector3 directionVector = differenceVector.normalized;
-            transform.position += directionVector * jumpForce * Time.deltaTime;
-        }
-
-    }
-
-    private void Fall()
-    {
-        Vector3 desiredPosition = new Vector3(transform.position.x, initialPlayerPositions.y, transform.position.z);
-        Vector3 currentPosition = transform.position;
-        Vector3 differenceVector = desiredPosition - currentPosition;
-
-        if (differenceVector.magnitude < 0.01 || isOnGround)
-        {
-            transform.position = desiredPosition;
-            animator.SetBool("IsJumping", false);
-            return;
-        }
-
-        Vector3 directionVector = differenceVector.normalized;
-        transform.position += directionVector * gravity * Time.deltaTime;
-
-    }*/
-
+    
     private bool IsDead(Collider other)
     {
         Vector3 otherObjectPosition = other.transform.position;

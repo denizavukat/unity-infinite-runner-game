@@ -7,9 +7,11 @@ public class SpawnManager : MonoBehaviour
 
 
     [SerializeField] float roadLength = 180.0f;
+    [SerializeField] float cityLength = 50.0f;
+    
     private float offsetDistance = 10.0f;
     private GameObject lastRoadTile;
-
+    private GameObject lastCityTile;
     public static SpawnManager instance;
 
     public float numberObstaclesOnRoad = 20;
@@ -35,6 +37,17 @@ public class SpawnManager : MonoBehaviour
         
         SpawnObstacleOnRoad(roadTile);
         exitPositionObstacle = 0.0f;
+
+    }
+
+    public void SpawnCity(Vector3 position)
+    {
+        GameObject cityTile = ObjectPooler.instance.GetFromPool("City");
+        cityTile.transform.position = position;
+        cityTile.transform.rotation = Quaternion.identity;
+        lastCityTile = cityTile;
+        Debug.Log("citye girdi");
+
 
     }
 
@@ -67,20 +80,31 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         exitPositionObstacle= PlayerController.instance.transform.position.z + 50;
+
+
+        lastCityTile = ObjectPooler.instance.GetFromPool("City");
         lastRoadTile = ObjectPooler.instance.GetFromPool("Road");
         
         for (int i = 0; i<3;i++) SpawnRoad(new Vector3(0, 0, i * roadLength));
-        
+
+        for (int i = 0; i < 5; i++) SpawnCity(new Vector3(0, 0, i * 50));
+
     }
 
     void Update()
     {
+        
         if (PlayerController.instance.transform.position.z > lastRoadTile.transform.position.z - 2 * roadLength + offsetDistance)
         {
             SpawnRoad(new Vector3(0, 0, lastRoadTile.transform.position.z + roadLength));
         }
+        //Debug.Log(lastCityTile.transform.position);
+        
+        SpawnCity(new Vector3(0, 0, lastCityTile.transform.position.z + cityLength));
 
-       
+        
+
+
 
 
     }
